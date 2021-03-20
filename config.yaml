@@ -1,0 +1,69 @@
+jwt:
+  signingkey: ""
+  expirestime: 0
+  buffertime: 0
+zerolog:
+  level: debug
+  callerskipframecount: 0
+  loginconsole: y
+  logfilepath: ""
+redis:
+  db: 0
+  addr: ""
+  password: ""
+email:
+  to: ""
+  port: 0
+  from: ""
+  host: ""
+  isssl: false
+  secret: ""
+  nickname: ""
+casbin:
+  modelpath: ""
+system:
+  env: ""
+  addr: 0
+  dbtype: ""
+  osstype: ""
+  usemultipoint: false
+captcha:
+  keylong: 0
+  imgwidth: 0
+  imgheight: 0
+gorm:
+  host: "127.0.0.1"
+  port: 5432
+  params: ""
+  dbname: "wblog"
+  username: "wblog_test"
+  password: "123456"
+  maxidleconns: 0
+  maxopenconns: 0
+  logmode: true
+  loglevel: "info"
+local:
+  path: ""
+qiniu:
+  zone: ""
+  bucket: ""
+  imgpath: ""
+  usehttps: false
+  accesskey: ""
+  secretkey: ""
+  usecdndomains: false
+aliyunoss:
+  endpoint: ""
+  accesskeyid: ""
+  accesskeysecret: ""
+  bucketname: ""
+  bucketurl: ""
+tencentcos:
+  bucket: ""
+  region: ""
+  secretid: ""
+  secretkey: ""
+  baseurl: ""
+  pathprefix: ""
+excel:
+  dir: ""
