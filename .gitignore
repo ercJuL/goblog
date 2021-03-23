@@ -232,3 +232,8 @@ $RECYCLE.BIN/
 *.lnk
 
 *.log
+
+# ent
+/ent
+!/ent/generate.go
+!/ent/schema
