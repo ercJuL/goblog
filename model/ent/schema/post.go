@@ -15,7 +15,7 @@ type Post struct {
 // Fields of the Post.
 func (Post) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("url_slug").Unique().Match(regexp.MustCompile("^[a-z][A-Z-]+$")).Comment("url slug"),
+		field.String("title_slug").Unique().NotEmpty().Match(regexp.MustCompile("^[a-z][A-Z-]+$")).Comment("url slug"),
 		field.String("title").Comment("标题"),
 		field.String("sub_title").Comment("子标题"),
 		field.String("content").Comment("内容"),
@@ -28,7 +28,7 @@ func (Post) Fields() []ent.Field {
 // Edges of the Post.
 func (Post) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("category", Category.Type),
-		edge.To("tag", Tag.Type),
+		edge.From("categories", Category.Type).Ref("posts").Unique(),
+		edge.From("tags", Tag.Type).Ref("posts"),
 	}
 }

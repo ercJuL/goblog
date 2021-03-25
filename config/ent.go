@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type Gorm struct {
+type Ent struct {
 	Host         string `mapstructure,json,yaml:"host"`
 	Port         int    `mapstructure,json,yaml:"port"`
 	Params       string `mapstructure,json,yaml:"params"`
@@ -20,17 +20,17 @@ type Gorm struct {
 	LogLevel     string `mapstructure,json,yaml:"log_level"`
 }
 
-func (m *Gorm) MysqlDsn() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", m.Username, m.Password, m.Host, m.Port, m.Dbname, m.Params)
+func (e *Ent) MysqlDsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", e.Username, e.Password, e.Host, e.Port, e.Dbname, e.Params)
 }
 
-func (m *Gorm) PostgreSqlDsn() string {
-	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d TimeZone=Asia/Shanghai", m.Host, m.Username, m.Password, m.Dbname, m.Port)
+func (e *Ent) PostgreSqlDsn() string {
+	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%s", e.Username, e.Password, e.Host, e.Port, e.Dbname)
 }
 
-func (m *Gorm) GormConfig() *gorm.Config {
+func (e *Ent) GormConfig() *gorm.Config {
 	var config = &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
-	switch m.LogLevel { // 初始化配置文件的Level
+	switch e.LogLevel { // 初始化配置文件的Level
 	case "silent", "Silent":
 		config.Logger = utils.Gormlogger.LogMode(logger.Silent)
 	case "error", "Error":

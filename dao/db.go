@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"gorm.io/gorm"
+	"goblog/model/ent"
 )
 
-var DefaultDB *gorm.DB
+var Client *ent.Client

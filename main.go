@@ -2,30 +2,50 @@ package main
 
 import (
 	"context"
-	_ "github.com/lib/pq"
-	"goblog/ent"
-	"log"
+	"github.com/rs/zerolog/log"
+	"goblog/initialize"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
-// func main() {
-// 	initialize.ViperInit()
-// 	initialize.ZeroLogInit()
-// 	initialize.DBInit()
-// 	router := initialize.RouterInit()
-// 	router.Run("127.0.0.1:13831")
-// 	log.Info().Msg("test")
-// }
-
 func main() {
-	client, err := ent.Open("postgres", "host=127.0.0.1 port=5432 user=wblog_test dbname=wblog password=123456")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Close()
+	initialize.ViperInit()
+	initialize.ZeroLogInit()
+	initialize.DBInit()
 
-	// Your code. For example:
-	ctx := context.Background()
-	if err := client.Schema.Create(ctx); err != nil {
-		log.Fatal(err)
+	router := initialize.RouterInit()
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: router,
 	}
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Error().Err(err).Msgf("listen error")
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 5 seconds.
+	quit := make(chan os.Signal)
+	// kill (no param) default send syscanll.SIGTERM
+	// kill -2 is syscall.SIGINT
+	// kill -9 is syscall. SIGKILL but can"t be catch, so don't need add it
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	log.Info().Msg("Shutdown Server ...")
+	initialize.DBDefer()
+	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Error().Err(err).Msg("Server Shutdown")
+	}
+	// catching ctx.Done(). timeout of 5 seconds.
+	select {
+	case <-ctx.Done():
+		log.Info().Msg("timeout of 5 seconds.")
+	}
+	log.Info().Msg("Server exiting")
 }

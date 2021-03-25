@@ -8,7 +8,7 @@ type Server struct {
 	Casbin     Casbin     `mapstructure,json,yaml:"casbin"`
 	System     System     `mapstructure,json,yaml:"system"`
 	Captcha    Captcha    `mapstructure,json,yaml:"captcha"`
-	Gorm       Gorm       `mapstructure,json,yaml:"gorm"`
+	Ent        Ent        `mapstructure,json,yaml:"ent"`
 	Local      Local      `mapstructure,json,yaml:"local"`
 	Qiniu      Qiniu      `mapstructure,json,yaml:"qiniu"`
 	AliyunOSS  AliyunOSS  `mapstructure,json,yaml:"aliyun_oss"`

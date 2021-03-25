@@ -31,7 +31,7 @@ captcha:
   keylong: 0
   imgwidth: 0
   imgheight: 0
-gorm:
+ent:
   host: "127.0.0.1"
   port: 5432
   params: ""
