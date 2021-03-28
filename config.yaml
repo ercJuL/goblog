@@ -40,8 +40,7 @@ ent:
   password: "123456"
   maxidleconns: 0
   maxopenconns: 0
-  logmode: true
-  loglevel: "info"
+  debug: true
 local:
   path: ""
 qiniu:

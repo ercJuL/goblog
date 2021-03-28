@@ -42,10 +42,5 @@ func main() {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Error().Err(err).Msg("Server Shutdown")
 	}
-	// catching ctx.Done(). timeout of 5 seconds.
-	select {
-	case <-ctx.Done():
-		log.Info().Msg("timeout of 5 seconds.")
-	}
 	log.Info().Msg("Server exiting")
 }

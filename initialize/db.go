@@ -10,25 +10,24 @@ import (
 	"goblog/config"
 	"goblog/dao"
 	"goblog/model/ent"
+	"goblog/utils"
 )
 
-// Open new connection
-func Open(databaseUrl string) *ent.Client {
-	db, err := sql.Open("pgx", databaseUrl)
+func DBInit() {
+	scm := config.ServerConfig.Ent
+	db, err := sql.Open("pgx", scm.PostgreSqlDsn())
 	if err != nil {
 		log.Panic().Err(err).Msg("打开数据库连接错误")
 	}
 
 	// Create an ent.Driver from `db`.
 	drv := entsql.OpenDB(dialect.Postgres, db)
-	return ent.NewClient(ent.Driver(drv))
-}
+	if scm.Debug {
+		dao.Client = ent.NewClient(ent.Driver(drv), ent.Debug(), ent.Log(utils.EntLog))
+	} else {
+		dao.Client = ent.NewClient(ent.Driver(drv))
+	}
 
-func DBInit() {
-	scm := config.ServerConfig.Ent
-	dao.Client = Open(scm.PostgreSqlDsn())
-
-	// todo: 自动索引模型
 	if err := dao.Client.Schema.Create(context.Background()); err != nil {
 		log.Panic().Err(err).Msg("表结构更新失败")
 	}
