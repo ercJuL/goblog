@@ -6,6 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"goblog/config"
 	"goblog/model/response"
+	"math/rand"
 )
 
 var store = base64Captcha.DefaultMemStore
@@ -20,7 +21,33 @@ var store = base64Captcha.DefaultMemStore
 func Captcha(c *gin.Context) {
 	// 字符,公式,验证码配置
 	// 生成默认数字的driver
-	driver := base64Captcha.NewDriverDigit(config.ServerConfig.Captcha.ImgHeight, config.ServerConfig.Captcha.ImgWidth, config.ServerConfig.Captcha.KeyLong, 0.7, 80)
+	var driver base64Captcha.Driver
+	switch rand.Intn(3) {
+	case 0:
+		driver = base64Captcha.NewDriverDigit(
+			config.ServerConfig.Captcha.ImgHeight,
+			config.ServerConfig.Captcha.ImgWidth,
+			config.ServerConfig.Captcha.KeyLong,
+			0.7,
+			80)
+	case 1:
+		driver = base64Captcha.NewDriverString(
+			config.ServerConfig.Captcha.ImgHeight,
+			config.ServerConfig.Captcha.ImgWidth,
+			0,
+			base64Captcha.OptionShowHollowLine|base64Captcha.OptionShowSlimeLine|base64Captcha.OptionShowSineLine,
+			config.ServerConfig.Captcha.KeyLong,
+			"1234567890qwertyuioplkjhgfdsazxcvbnm",
+			nil, nil)
+	case 2:
+		driver = base64Captcha.NewDriverMath(
+			config.ServerConfig.Captcha.ImgHeight,
+			config.ServerConfig.Captcha.ImgWidth,
+			0,
+			base64Captcha.OptionShowHollowLine|base64Captcha.OptionShowSlimeLine|base64Captcha.OptionShowSineLine,
+			nil, nil)
+	}
+
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
 		log.Error().Err(err).Msg("验证码获取失败")
