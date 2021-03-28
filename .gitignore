@@ -237,3 +237,6 @@ $RECYCLE.BIN/
 /ent
 !/ent/generate.go
 !/ent/schema
+
+# swagger
+/docs

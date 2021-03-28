@@ -28,9 +28,9 @@ system:
   osstype: ""
   usemultipoint: false
 captcha:
-  keylong: 0
-  imgwidth: 0
-  imgheight: 0
+  keylong: 5
+  imgwidth: 240
+  imgheight: 80
 ent:
   host: "127.0.0.1"
   port: 5432

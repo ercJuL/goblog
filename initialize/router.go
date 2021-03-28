@@ -1,20 +1,25 @@
 package initialize
 
 import (
-	"github.com/casbin/casbin/v2"
-	"github.com/gin-contrib/authz"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	_ "goblog/docs"
 	"goblog/middleware"
+	"goblog/router"
 )
 
 func RouterInit() *gin.Engine {
-	var router = gin.Default()
-	e, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
-	router.Use(middleware.Cors())
-	router.Use(authz.NewAuthorizer(e))
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	var gRouter = gin.Default()
+	// e, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
+	gRouter.Use(middleware.Cors())
+	// gRouter.Use(authz.NewAuthorizer(e))
+	gRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	return router
+	PublicGroup := gRouter.Group("")
+	{
+		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+	}
+
+	return gRouter
 }
