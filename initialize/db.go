@@ -8,8 +8,8 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/rs/zerolog/log"
 	"goblog/config"
-	"goblog/dao"
 	"goblog/model/ent"
+	"goblog/service"
 	"goblog/utils"
 )
 
@@ -23,19 +23,19 @@ func DBInit() {
 	// Create an ent.Driver from `db`.
 	drv := entsql.OpenDB(dialect.Postgres, db)
 	if scm.Debug {
-		dao.Client = ent.NewClient(ent.Driver(drv), ent.Debug(), ent.Log(utils.EntLog))
+		service.Client = ent.NewClient(ent.Driver(drv), ent.Debug(), ent.Log(utils.EntLog))
 	} else {
-		dao.Client = ent.NewClient(ent.Driver(drv))
+		service.Client = ent.NewClient(ent.Driver(drv))
 	}
 
-	if err := dao.Client.Schema.Create(context.Background()); err != nil {
+	if err := service.Client.Schema.Create(context.Background()); err != nil {
 		log.Panic().Err(err).Msg("表结构更新失败")
 	}
 
 }
 
 func DBDefer() {
-	if err := dao.Client.Close(); err != nil {
+	if err := service.Client.Close(); err != nil {
 		log.Err(err).Stack().Msg("关闭数据库连接错误")
 	}
 }
