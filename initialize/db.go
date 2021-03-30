@@ -36,6 +36,6 @@ func DBInit() {
 
 func DBDefer() {
 	if err := dao.Client.Close(); err != nil {
-		log.Error().Err(err).Msg("关闭数据库连接错误")
+		log.Err(err).Stack().Msg("关闭数据库连接错误")
 	}
 }

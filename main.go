@@ -23,7 +23,7 @@ func main() {
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Error().Err(err).Msgf("listen error")
+			log.Err(err).Stack().Msgf("listen error")
 		}
 	}()
 
@@ -40,7 +40,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Error().Err(err).Msg("Server Shutdown")
+		log.Err(err).Stack().Msg("Server Shutdown")
 	}
 	log.Info().Msg("Server exiting")
 }

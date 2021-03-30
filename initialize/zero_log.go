@@ -42,7 +42,7 @@ func ZeroLogInit() {
 	}
 	logfile, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_RDWR|os.O_SYNC, 0666)
 	if err != nil {
-		log.Panic().Err(err).Caller().Msg("打开日志文件错误")
+		log.Panic().Err(err).Msg("打开日志文件错误")
 	}
 
 	var w io.Writer

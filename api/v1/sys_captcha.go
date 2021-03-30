@@ -50,7 +50,7 @@ func Captcha(c *gin.Context) {
 
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
-		log.Error().Err(err).Msg("验证码获取失败")
+		log.Err(err).Stack().Msg("验证码获取失败")
 		response.FailWithMessage("验证码获取失败", c)
 	} else {
 		response.OkWithDetailed(response.SysCaptchaResponse{
